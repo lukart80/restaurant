@@ -10,9 +10,9 @@
       {% if forloop.first %}
         <div class="row justify-content-md-center">
       {% endif %}
-    <div class="col">
+    <div class="col-sm-4">
       <div class="card" style="width: 18rem;">
-        <img src="{{ product.picture }}" class="card-img-top" alt="no img" width="1000px" height="250px">
+        <img src="{{ product.picture }}" class="card-img-top" alt="no img" width="18rem" height="250rem">
         <div class="card-body">
           <h5 class="card-title">{{ product.name }}</h5>
           <p class="card-text">{{ product.description }}</p>
@@ -24,10 +24,11 @@
       <div class="row">{% endif %}
     {% if forloop.last %}</div>{% endif %}
     {% endfor %}
-  </div>
+
 
 
   {% include 'includes/paginator.html' %}
+  </div>
   {% include 'includes/footer.html' %}
 
 
