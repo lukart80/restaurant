@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def homepage_view(request):
+    """View-функция для отображения главной страницы."""
+    return render(request, 'menu/homepage.html', {})
