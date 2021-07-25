@@ -46,10 +46,11 @@ class Cart:
         return self.cart[product_id]['price'] * self.cart[product_id][
             'quantity']
 
+    @property
     def get_total_price(self):
         """Метод для подсчета стоимости всех товаров."""
         return sum(
-            item['price'] * item['quantity'] for item in self.cart.values())
+            Decimal(item['price']) * item['quantity'] for item in self.cart.values())
 
     def __iter__(self):
         """Итератор возвращает данные товаров в корзине."""

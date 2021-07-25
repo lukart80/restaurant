@@ -4,11 +4,14 @@
 {% block content %}
   {% include 'includes/nav.html' %}
   {% for item in cart %}
-    <h1>{{ item.product.name }}</h1>
-    <h2>{{ item.price }}</h2>
-    <h2>{{ item.quantity }}</h2>
+    <h1>Блюдо {{ item.product.name }}</h1>
+    <h2>Цена {{ item.price }} руб.</h2>
+    <h2>Количество {{ item.quantity }}</h2>
+    <a href="{% url 'delete_product' item.product.pk %}"
+               class="btn btn-danger">Убрать из корзины</a>
   {% empty %}
     <h2>Корзина пуста</h2>
   {% endfor %}
+  <h3>Итого: {{ cart.get_total_price }}</h3>
   {% include 'includes/footer.html' %}
 {% endblock %}
