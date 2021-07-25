@@ -62,3 +62,7 @@ class Cart:
 
         for item in cart.values():
             yield item
+
+    def count_products_in_cart(self):
+        """Метод для подсчета товаров в корзине."""
+        return len(self.cart.keys())

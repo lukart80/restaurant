@@ -1,9 +1,16 @@
 <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-  <a class="navbar-brand" href="{% url 'home' %}"><span style="color:red">А</span>-еда</a>
+  <a class="navbar-brand" href="{% url 'home' %}"><span
+    style="color:red">А</span>-еда</a>
   <nav class="my-2 my-md-0 mr-md-3">
     {% if user.is_authenticated %}
       Пользователь: <a href="#">{{ user.username }}</a>
-      <a class="p-2 text-dark" href="{% url 'show_cart' %}">Моя корзина</a>
+      <a class="p-2 text-dark" href="{% url 'show_cart' %}">
+        Моя корзина
+        {% if cart.count_products_in_cart > 0 %}
+          ({{ cart.count_products_in_cart }})
+        {% endif %}
+
+      </a>
       <a class="p-2 text-dark" href="#">Изменить пароль</a>
       <a class="p-2 text-dark" href="#">Выйти</a>
     {% else %}
