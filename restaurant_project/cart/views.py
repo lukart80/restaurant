@@ -8,7 +8,10 @@ def add_product_view(request, product_id):
     """View функция для добавление продукта в корзину."""
 
     product = get_object_or_404(Product, id=product_id)
-
+    try:
+        check_quantity(product, 1)
+    except ValueError:
+        return redirect('home')
     cart = Cart(request)
     cart.add_item(product)
     return redirect('home')
