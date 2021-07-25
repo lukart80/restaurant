@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+  {% include 'includes/nav.html' %}
+  {% for item in cart %}
+    <h1>{{ item.product.name }}</h1>
+    <h2>{{ item.price }}</h2>
+    <h2>{{ item.quantity }}</h2>
+  {% empty %}
+    <h2>Корзина пуста</h2>
+  {% endfor %}
+  {% include 'includes/footer.html' %}
+{% endblock %}

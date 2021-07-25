@@ -3,7 +3,7 @@
 
 {% block content %}
   {% include 'includes/nav.html' %}
-
+  {% load my_templatetags %}
   <div class="container">
     {% for product in page %}
 
@@ -12,11 +12,19 @@
       {% endif %}
     <div class="col-sm-4">
       <div class="card" style="width: 18rem;">
-        <img src="{{ product.picture }}" class="card-img-top" alt="no img" width="18rem" height="250rem">
+        <img src="{{ product.picture }}" class="card-img-top" alt="no img"
+             width="18rem" height="250rem">
         <div class="card-body">
           <h5 class="card-title">{{ product.name }}</h5>
           <p class="card-text">{{ product.description }}</p>
-          <a href="#" class="btn btn-primary">В корзину</a>
+          {% if product.pk|to_str in cart.cart.keys %}
+            <a href="{% url 'delete_product' product.pk %}"
+               class="btn btn-danger">Убрать из корзины</a>
+          {% else %}
+            <a href="{% url 'add_to_cart' product.pk %}"
+               class="btn btn-primary">В корзину</a>
+          {% endif %}
+
         </div>
       </div>
     </div>
@@ -27,7 +35,7 @@
 
 
 
-  {% include 'includes/paginator.html' %}
+    {% include 'includes/paginator.html' %}
   </div>
   {% include 'includes/footer.html' %}
 
