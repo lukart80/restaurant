@@ -39,7 +39,8 @@ class Cart:
 
     def delete_cart(self):
         """Метод для удаления корзины."""
-        del self.cart
+        del self.session[settings.CART_ID]
+        self.save()
 
     def get_product_price(self, product_id):
         """Метод для подсчета стоимости одного товара."""
