@@ -112,3 +112,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Cart
 CART_ID = 'cart'
 
+# Orders setting
+DELIVERY_ORDERS_KEY = 'delivery_orders'
+PICKUP_ORDERS_KEY = 'pickup_orders'
+
+# Sessions
+USER_DATA_KEY = 'user_data'

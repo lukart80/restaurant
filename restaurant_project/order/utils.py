@@ -1,0 +1,51 @@
+import random
+from django.conf import settings
+
+def get_user_data_from_session(request):
+    """Функция возращает данный пользователя, хранящиеся в session,
+    если нет, то None."""
+    user_data = request.session.get(settings.USER_DATA_KEY)
+    return user_data
+
+
+def alter_user_data_in_session(request):
+    """Функция изменяет данные пользователя на основе POST запроса."""
+
+    request.session['user_data'] = {
+        'first_name': request.POST['first_name'],
+        'last_name': request.POST['last_name'],
+        'email': request.POST['email'],
+    }
+
+
+def send_order_and_items_to_db(form_obj, cart_obj, OrderItem):
+    """Функция сохранит заказ и входящие в него продукты в базу данных,
+    возвращает сохраненный заказ. """
+
+    order = form_obj.save(commit=False)
+    order.code = random.randint(100, 999)
+    order.price = cart_obj.get_total_price
+    order.save()
+    for item in cart_obj:
+        product = item['product']
+        OrderItem.objects.create(
+            order=order,
+            product=product,
+            quantity=item['quantity']
+        )
+    cart_obj.delete_cart()
+    return order
+
+
+def generate_order_code():
+    """Функция генерирует код заказа от 100 до 999."""
+    # TODO надо сделать, чтобы функция не сгенерировала существующий код
+    #  заказа
+    pass
+
+
+def add_order_to_session(request, order_obj, key):
+    """Добавляет id созданного заказа в session."""
+    customer_orders = request.session.setdefault(key, [])
+    customer_orders.append(str(order_obj.pk))
+    alter_user_data_in_session(request)

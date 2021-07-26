@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, \
@@ -38,9 +39,11 @@ class BaseOrder(models.Model):
 
                                )
     price = models.PositiveIntegerField(default=0, verbose_name='цена')
+    date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True
+        ordering = ['-date']
 
 
 class DeliveryOrder(BaseOrder):
