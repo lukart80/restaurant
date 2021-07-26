@@ -50,7 +50,7 @@ class DeliveryOrder(BaseOrder):
                               verbose_name='статус',
                               default='unpaid')
     delivery_address = models.CharField(max_length=100,
-                                        verbose_name='адресс доставки')
+                                        verbose_name='адрес доставки')
 
     def __str__(self):
         return f'Доставка номер {self.id}'

@@ -1,9 +1,9 @@
 import random
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import DeliveryOrderForm, PickUpOrderForm
-from django.core import serializers
+
 from cart.cart import Cart
-from menu.models import Product
+
 from .models import OrderItem, DeliveryOrder, PickUpOrder
 
 
