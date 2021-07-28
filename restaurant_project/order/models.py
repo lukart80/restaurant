@@ -106,4 +106,7 @@ def remove_deleted_order_from_session(sender, instance, *args, **kwargs):
     else:
         orders_id = session[settings.PICKUP_ORDERS_KEY]
     orders_id.remove(str(instance.id))
+    for order_id in orders_id:
+        if order_id == str(instance.id):
+            del order_id
     session.save()
