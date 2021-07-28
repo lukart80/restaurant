@@ -1,6 +1,7 @@
 import random
 from django.conf import settings
 
+
 def get_user_data_from_session(request):
     """Функция возращает данный пользователя, хранящиеся в session,
     если нет, то None."""
@@ -18,11 +19,11 @@ def alter_user_data_in_session(request):
     }
 
 
-def send_order_and_items_to_db(form_obj, cart_obj, OrderItem):
+def send_order_and_items_to_db(session_id, form_obj, cart_obj, OrderItem):
     """Функция сохранит заказ и входящие в него продукты в базу данных,
     возвращает сохраненный заказ. """
-
     order = form_obj.save(commit=False)
+    order.session_id = session_id
     order.code = random.randint(100, 999)
     order.price = cart_obj.get_total_price
     order.save()
@@ -48,4 +49,3 @@ def add_order_to_session(request, order_obj, key):
     """Добавляет id созданного заказа в session."""
     customer_orders = request.session.setdefault(key, [])
     customer_orders.append(str(order_obj.pk))
-    alter_user_data_in_session(request)

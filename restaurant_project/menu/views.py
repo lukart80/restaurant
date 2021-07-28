@@ -10,5 +10,7 @@ def homepage_view(request):
     page = paginator.get_page(request.GET.get('page'))
     context = {
         'page': page,
+        'session': request.session
     }
+
     return render(request, 'menu/homepage.html', context)

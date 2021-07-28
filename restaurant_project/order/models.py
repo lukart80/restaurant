@@ -1,8 +1,11 @@
-import datetime
+from django.dispatch import receiver
+from django.db.models.signals import pre_delete
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, \
     GenericRelation
+from django.contrib.sessions.backends.db import SessionStore
+from django.conf import settings
 from menu.models import Product
 
 STATUS_CHOICES_DELIVERY = [
@@ -28,6 +31,7 @@ RESTAURANT_CHOICES = [
 
 class BaseOrder(models.Model):
     """Базовая модель заказа."""
+    session_id = models.CharField(default=0, max_length=150)
     first_name = models.CharField(max_length=50, verbose_name='имя')
     last_name = models.CharField(max_length=50, verbose_name='фамилия')
     email = models.EmailField()
@@ -90,3 +94,16 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return self.product.name
+
+
+@receiver(pre_delete, sender=DeliveryOrder)
+@receiver(pre_delete, sender=PickUpOrder)
+def remove_deleted_order_from_session(sender, instance, *args, **kwargs):
+    """Функция при удалении заказа из БД удаляет его id и из сессии."""
+    session = SessionStore(session_key=instance.session_id)
+    if sender is DeliveryOrder:
+        orders_id = session[settings.DELIVERY_ORDERS_KEY]
+    else:
+        orders_id = session[settings.PICKUP_ORDERS_KEY]
+    orders_id.remove(str(instance.id))
+    session.save()

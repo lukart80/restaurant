@@ -9,6 +9,7 @@ from .utils import get_user_data_from_session, alter_user_data_in_session, \
 
 def create_delivery_order(request):
     """View-функция для создания заказа."""
+    session_id = request.session.session_key
     user_data = get_user_data_from_session(request)
     form = DeliveryOrderForm(initial=user_data)
     if request.method == 'POST':
@@ -18,7 +19,7 @@ def create_delivery_order(request):
             return redirect('home')
 
         if form.is_valid():
-            order = send_order_and_items_to_db(form, cart, OrderItem)
+            order = send_order_and_items_to_db(session_id, form, cart, OrderItem)
             add_order_to_session(request, order, settings.DELIVERY_ORDERS_KEY)
             alter_user_data_in_session(request)
 
@@ -47,13 +48,14 @@ def show_orders(request):
 
 
 def create_pick_up_order(request):
+    session_id = request.session.session_key
     user_data = get_user_data_from_session(request)
     form = PickUpOrderForm(initial=user_data)
     if request.method == 'POST':
         form = PickUpOrderForm(request.POST)
         cart = Cart(request)
         if form.is_valid():
-            order = send_order_and_items_to_db(form, cart, OrderItem)
+            order = send_order_and_items_to_db(session_id, form, cart, OrderItem)
             add_order_to_session(request, order, settings.PICKUP_ORDERS_KEY)
             alter_user_data_in_session(request)
             return redirect('show_orders')
