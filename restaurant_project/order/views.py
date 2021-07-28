@@ -1,11 +1,11 @@
 from cart.cart import Cart
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.conf import settings
 from .forms import DeliveryOrderForm, PickUpOrderForm
-from .models import OrderItem, DeliveryOrder
-from .utils import get_user_data_from_session, alter_user_data_in_session, \
-    send_order_and_items_to_db, add_order_to_session
-
+from .utils import (get_user_data_from_session, alter_user_data_in_session,
+                    send_order_and_items_to_db, add_order_to_session,
+                    get_orders_from_session)
+from .models import DeliveryOrder, PickUpOrder
 
 def create_delivery_order(request):
     """View-функция для создания заказа."""
@@ -19,7 +19,7 @@ def create_delivery_order(request):
             return redirect('home')
 
         if form.is_valid():
-            order = send_order_and_items_to_db(session_id, form, cart, OrderItem)
+            order = send_order_and_items_to_db(session_id, form, cart)
             add_order_to_session(request, order, settings.DELIVERY_ORDERS_KEY)
             alter_user_data_in_session(request)
 
@@ -31,18 +31,12 @@ def create_delivery_order(request):
 
 
 def show_orders(request):
-
-    delivery_orders_ids = request.session.get(settings.DELIVERY_ORDERS_KEY)
-    if delivery_orders_ids:
-        delivery_orders = []
-        for str_order_id in delivery_orders_ids:
-            order_del = get_object_or_404(DeliveryOrder, pk=int(str_order_id))
-            delivery_orders.append(order_del)
-    else:
-        delivery_orders = None
-
+    """View-функция для просмотра всех заказов."""
+    delivery_orders = get_orders_from_session(request, DeliveryOrder)
+    pickup_orders = get_orders_from_session(request, PickUpOrder)
     context = {
-        'delivery_orders': delivery_orders
+        'delivery_orders': delivery_orders,
+        'pickup_orders': pickup_orders,
     }
     return render(request, 'order/show_orders.html', context)
 
@@ -55,7 +49,7 @@ def create_pick_up_order(request):
         form = PickUpOrderForm(request.POST)
         cart = Cart(request)
         if form.is_valid():
-            order = send_order_and_items_to_db(session_id, form, cart, OrderItem)
+            order = send_order_and_items_to_db(session_id, form, cart)
             add_order_to_session(request, order, settings.PICKUP_ORDERS_KEY)
             alter_user_data_in_session(request)
             return redirect('show_orders')

@@ -24,8 +24,25 @@
   {% else %}
     <p>Вы ничего не заказывали с доставкой</p>
   {% endif %}
-    <h2>Заказы самовывозом</h2>
-  
+  <h2>Заказы самовывозом</h2>
+  {% if pickup_orders %}
+    {% for order in pickup_orders %}
+      <p>Код заказа {{ order.code }}</p>
+      <p>Время {{ order.date }}</p>
+      <p>Адресс доставки {{ order.restaurant }}</p>
+      <p>Состав заказа</p>
+      {% for product in order.products.all %}
+        <ul>
+          <li>{{ product.product.name }} / {{ product.quantity }} шт.</li>
+
+        </ul>
+      {% endfor %}
+      <p>Итоговая цена: {{ order.price }} р.</p>
+      <hr>
+    {% endfor %}
+  {% else %}
+    <p>Вы ничего не заказывали самовывозом</p>
+  {% endif %}
 
 
   {% include 'includes/footer.html' %}

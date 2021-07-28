@@ -1,5 +1,7 @@
 import random
 from django.conf import settings
+from django.shortcuts import get_object_or_404
+from .models import PickUpOrder, DeliveryOrder, OrderItem
 
 
 def get_user_data_from_session(request):
@@ -19,7 +21,7 @@ def alter_user_data_in_session(request):
     }
 
 
-def send_order_and_items_to_db(session_id, form_obj, cart_obj, OrderItem):
+def send_order_and_items_to_db(session_id, form_obj, cart_obj):
     """Функция сохранит заказ и входящие в него продукты в базу данных,
     возвращает сохраненный заказ. """
     order = form_obj.save(commit=False)
@@ -49,3 +51,18 @@ def add_order_to_session(request, order_obj, key):
     """Добавляет id созданного заказа в session."""
     customer_orders = request.session.setdefault(key, [])
     customer_orders.append(str(order_obj.pk))
+
+
+def get_orders_from_session(request, order_model):
+    """Функция возвращает список заказов из сессии."""
+    if order_model is DeliveryOrder:
+        orders_ids = request.session.get(settings.DELIVERY_ORDERS_KEY)
+    else:
+        orders_ids = request.session.get(settings.PICKUP_ORDERS_KEY)
+    if orders_ids:
+        delivery_orders = []
+        for str_order_id in orders_ids:
+            order_del = get_object_or_404(order_model, pk=int(str_order_id))
+            delivery_orders.append(order_del)
+        return delivery_orders
+    return None
