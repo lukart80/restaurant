@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Оплата{% endblock %}
+
+{% block content %}
+  {% include 'includes/nav.html' %}
+  <h1>Спасибо, ваша заказ оформлен</h1>
+  <a href="{% url 'show_orders' %}">Перейти к заказам</a>
+
+  {% include 'includes/footer.html' %}
+
+
+{% endblock %}

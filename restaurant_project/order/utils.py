@@ -1,7 +1,7 @@
 import random
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from .models import PickUpOrder, DeliveryOrder, OrderItem
+from .models import DeliveryOrder, OrderItem
 
 
 def get_user_data_from_session(request):
@@ -64,5 +64,5 @@ def get_orders_from_session(request, order_model):
         for str_order_id in orders_ids:
             order_del = get_object_or_404(order_model, pk=int(str_order_id))
             delivery_orders.append(order_del)
-        return delivery_orders
+        return reversed(delivery_orders)
     return None

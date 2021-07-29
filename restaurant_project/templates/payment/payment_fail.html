@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Оплата{% endblock %}
+
+{% block content %}
+  {% include 'includes/nav.html' %}
+  <h1>К сожалению оплата не прошла, попробуйте еще раз!</h1>
+  <a href="{% url 'show_orders' %}">Вернуться к заказам</a>
+
+  {% include 'includes/footer.html' %}
+
+
+{% endblock %}

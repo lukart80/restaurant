@@ -19,6 +19,9 @@
         </ul>
       {% endfor %}
       <p>Итоговая цена: {{ order.price }} р.</p>
+      {% if order.status == "unpaid" %}
+        <a href="{% url 'pay_for_delivery' order.pk %}" class="btn btn-primary">Оплатить</a>
+      {% endif %}
       <hr>
     {% endfor %}
   {% else %}
@@ -38,6 +41,9 @@
         </ul>
       {% endfor %}
       <p>Итоговая цена: {{ order.price }} р.</p>
+      {% if order.status == "unpaid" %}
+        <a href="{% url 'pay_for_pickup' order.pk %}" class="btn btn-primary">Оплатить</a>
+      {% endif %}
       <hr>
     {% endfor %}
   {% else %}

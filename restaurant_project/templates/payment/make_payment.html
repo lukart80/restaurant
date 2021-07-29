@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Оплата{% endblock %}
+
+{% block content %}
+  {% include 'includes/nav.html' %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" class="btn-primary">Оплатить</button>
+  </form>
+
+  {% include 'includes/footer.html' %}
+
+
+{% endblock %}
