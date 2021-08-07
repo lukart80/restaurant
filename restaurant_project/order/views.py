@@ -6,6 +6,8 @@ from .utils import (get_user_data_from_session, alter_user_data_in_session,
                     send_order_and_items_to_db, add_order_to_session,
                     get_orders_from_session)
 from .models import DeliveryOrder, PickUpOrder
+from .order import PickUpOrderProcessor
+
 
 def create_delivery_order(request):
     """View-функция для создания заказа."""
@@ -15,6 +17,7 @@ def create_delivery_order(request):
     if request.method == 'POST':
         form = DeliveryOrderForm(data=request.POST)
         cart = Cart(request)
+
         if not cart.cart:
             return redirect('home')
 
@@ -33,7 +36,7 @@ def create_delivery_order(request):
 def show_orders(request):
     """View-функция для просмотра всех заказов."""
     delivery_orders = get_orders_from_session(request, DeliveryOrder)
-    pickup_orders = get_orders_from_session(request, PickUpOrder)
+    pickup_orders = PickUpOrderProcessor(request).show_all_orders()
     context = {
         'delivery_orders': delivery_orders,
         'pickup_orders': pickup_orders,
@@ -42,15 +45,18 @@ def show_orders(request):
 
 
 def create_pick_up_order(request):
-    session_id = request.session.session_key
+
     user_data = get_user_data_from_session(request)
     form = PickUpOrderForm(initial=user_data)
     if request.method == 'POST':
         form = PickUpOrderForm(request.POST)
         cart = Cart(request)
+        order = PickUpOrderProcessor(request)
+
         if form.is_valid():
-            order = send_order_and_items_to_db(session_id, form, cart)
-            add_order_to_session(request, order, settings.PICKUP_ORDERS_KEY)
+            order_obj = order.add_order_to_db(form, cart)
+            order.add_order_to_session(order_obj.pk)
+
             alter_user_data_in_session(request)
             return redirect('show_orders')
         context = {'form': form}
