@@ -7,6 +7,7 @@ from .models import OrderItem, PickUpOrder, DeliveryOrder
 
 
 class BaseOrderHandler:
+    """Базовый класс для обработчиков заказов."""
     def __init__(self, request):
         self.session = request.session
         self.orders_ids = []
@@ -28,6 +29,7 @@ class BaseOrderHandler:
 
 
 class PickUpOrderHandler(BaseOrderHandler):
+    """Обработчик заказов с самовывозом."""
     def __init__(self, request):
         super().__init__(request)
         self.orders_ids = self.session.setdefault(
@@ -37,6 +39,7 @@ class PickUpOrderHandler(BaseOrderHandler):
 
 
 class DeliveryOrderHandler(BaseOrderHandler):
+    """Обработчик заказов с доставкой."""
     def __init__(self, request):
         super().__init__(request)
         self.orders_ids = self.session.setdefault(

@@ -42,6 +42,7 @@ def show_orders(request):
 
 
 def create_pick_up_order(request):
+    """View-функция для создания заказы самовывозом."""
     user_data = get_user_data_from_session(request)
     form = PickUpOrderForm(initial=user_data)
     if request.method == 'POST':
